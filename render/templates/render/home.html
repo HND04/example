@@ -1,31 +1,45 @@
-<!-- templates/home.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Data Display</title>
+    <title>WebSocket Data Display</title>
 </head>
 <body>
-    <h1>Data Display</h1>
+    <h1>WebSocket Data Display</h1>
     <div id="dataDisplay"></div>
+
     <script>
-        // JavaScript code to update the data display
-        var dataDisplay = document.getElementById('dataDisplay');
+        // Function to establish WebSocket connection
+        function connectWebSocket() {
+            var socket = new WebSocket("ws://your-websocket-server-domain/your-websocket-endpoint/");
 
-        // WebSocket connection
-        var socket = new WebSocket("ws://https://example-4y0h.onrender.com/api/ws/pi/");
+            // On connection open
+            socket.onopen = function (event) {
+                console.log("WebSocket connection opened");
+            };
 
-        // On receiving message
-        socket.onmessage = function (event) {
-            var data = JSON.parse(event.data);
-            var dataHTML = '';
-            for (var key in data) {
-                if (data.hasOwnProperty(key)) {
-                    dataHTML += '<p>' + key + ': ' + data[key] + '</p>';
-                }
-            }
-            dataDisplay.innerHTML = dataHTML;
+            // On receiving message
+            socket.onmessage = function (event) {
+                // Update the data display area with the received data
+                var dataDisplay = document.getElementById("dataDisplay");
+                dataDisplay.textContent = event.data;
+            };
+
+            // On connection close
+            socket.onclose = function (event) {
+                console.log("WebSocket connection closed");
+            };
+
+            // On connection error
+            socket.onerror = function (error) {
+                console.error("WebSocket error:", error);
+            };
+        }
+
+        // Initialize WebSocket connection when the page loads
+        window.onload = function () {
+            connectWebSocket();
         };
     </script>
 </body>
