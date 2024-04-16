@@ -6,3 +6,5 @@ def index(request):
 
 def data_view(request):
     return render(request, 'render/data.html',{})
+def home(request):
+    return render(request, 'render/home.html',{})
