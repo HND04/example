@@ -123,7 +123,21 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 # settings.py
+import os
 
+# Get the Redis connection string from the environment variable
+REDIS_URL = os.environ.get('REDIS_URL', 'redis://localhost:6379')
+
+# Configure the cache backend to use Redis
+CACHES = {
+    'default': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': REDIS_URL,
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+        }
+    }
+}
 # Install channels_redis if using Redis as the backend
 # pip install channels_redis
 
@@ -131,7 +145,7 @@ CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            'hosts': [('localhost', 6379)],
+            'hosts':[ REDIS_URL],
         },
     },
 }
