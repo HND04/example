@@ -1,13 +1,8 @@
-import os
-from django.core.asgi import get_asgi_application
-from channels.routing import ProtocolTypeRouter, URLRouter
-from mysite import routing
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'pro1.settings')
+# routing.py
+from django.urls import path
+from . import consumers
 
-application = ProtocolTypeRouter({
-    "http": get_asgi_application(),
-    "websocket": URLRouter(
-        routing.websocket_urlpatterns
-    ),
-})
+websocket_urlpatterns = [
+    path('ws/pi/', consumers.PiConsumer.as_asgi()),
+]
