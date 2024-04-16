@@ -3,11 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Data Display</title>
+    <title>WebSocket Client</title>
+</head>
+<body>
+    <h1>WebSocket Client</h1>
+    <div id="messages"></div>
+    <form id="messageForm">
+        <input type="text" id="messageInput" placeholder="Enter message">
+        <button type="submit">Send</button>
+    </form>
+
     <script>
-        // Function to handle WebSocket connection
+        // Function to establish WebSocket connection
         function connectWebSocket() {
-            var socket = new WebSocket("ws://https://example-4y0h.onrender.com//ws/pi/");
+            var socket = new WebSocket("ws://https://example-4y0h.onrender.com//ws/pi/"); // Replace with your WebSocket server URL
 
             // On connection open
             socket.onopen = function (event) {
@@ -16,20 +25,8 @@
 
             // On receiving message
             socket.onmessage = function (event) {
-                // Parse the received JSON data
-                var data = JSON.parse(event.data);
-                
-                // Display the received data
-                var dataDisplay = document.getElementById("dataDisplay");
-                dataDisplay.innerHTML = ""; // Clear previous data
-                
-                for (var key in data) {
-                    if (data.hasOwnProperty(key)) {
-                        var paragraph = document.createElement("p");
-                        paragraph.textContent = key + ": " + data[key];
-                        dataDisplay.appendChild(paragraph);
-                    }
-                }
+                var messagesDiv = document.getElementById("messages");
+                messagesDiv.innerHTML += "<p>Received: " + event.data + "</p>";
             };
 
             // On connection close
@@ -41,16 +38,22 @@
             socket.onerror = function (error) {
                 console.error("WebSocket error:", error);
             };
+
+            // Handle form submission
+            var form = document.getElementById("messageForm");
+            form.addEventListener("submit", function (event) {
+                event.preventDefault();
+                var input = document.getElementById("messageInput");
+                var message = input.value;
+                socket.send(message);
+                input.value = ""; // Clear input field
+            });
         }
 
-        // Function to initialize WebSocket connection
-        function init() {
+        // Initialize WebSocket connection when the page loads
+        window.onload = function () {
             connectWebSocket();
-        }
+        };
     </script>
-</head>
-<body onload="init()">
-    <h1>Data Display</h1>
-    <div id="dataDisplay"></div> <!-- Add an ID to the div to display data -->
 </body>
 </html>
