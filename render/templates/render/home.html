@@ -3,17 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WebSocket Data Display</title>
+    <title>WebSocket Client</title>
 </head>
 <body>
-    <h1>WebSocket Data Display</h1>
-    <div id="dataDisplay"></div>
+    <h1>WebSocket Client</h1>
+    <div id="messages"></div>
+    <form id="messageForm">
+        <input type="text" id="messageInput" placeholder="Enter message">
+        <button type="submit">Send</button>
+    </form>
 
     <script>
         // Function to establish WebSocket connection
         function connectWebSocket() {
-            var socket = new WebSocket("ws://example-4y0h.onrender.com/ws/pi/");
-);
+            var socket = new WebSocket("ws://https://example-4y0h.onrender.com//ws/pi/"); // Replace with your WebSocket server URL
 
             // On connection open
             socket.onopen = function (event) {
@@ -22,9 +25,8 @@
 
             // On receiving message
             socket.onmessage = function (event) {
-                // Update the data display area with the received data
-                var dataDisplay = document.getElementById("dataDisplay");
-                dataDisplay.textContent = event.data;
+                var messagesDiv = document.getElementById("messages");
+                messagesDiv.innerHTML += "<p>Received: " + event.data + "</p>";
             };
 
             // On connection close
@@ -36,6 +38,16 @@
             socket.onerror = function (error) {
                 console.error("WebSocket error:", error);
             };
+
+            // Handle form submission
+            var form = document.getElementById("messageForm");
+            form.addEventListener("submit", function (event) {
+                event.preventDefault();
+                var input = document.getElementById("messageInput");
+                var message = input.value;
+                socket.send(message);
+                input.value = ""; // Clear input field
+            });
         }
 
         // Initialize WebSocket connection when the page loads
