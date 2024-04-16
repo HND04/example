@@ -22,6 +22,7 @@
             socket.onmessage = function (event) {
                 var messagesDiv = document.getElementById("messages");
                 messagesDiv.innerHTML += "<p>Received: " + event.data + "</p>";
+                console.log(data)
             };
 
             // On connection close
