@@ -1,0 +1,32 @@
+<!-- templates/home.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Display</title>
+</head>
+<body>
+    <h1>Data Display</h1>
+    <div id="dataDisplay"></div>
+    <script>
+        // JavaScript code to update the data display
+        var dataDisplay = document.getElementById('dataDisplay');
+
+        // WebSocket connection
+        var socket = new WebSocket("ws://https://example-4y0h.onrender.com/api/ws/pi/");
+
+        // On receiving message
+        socket.onmessage = function (event) {
+            var data = JSON.parse(event.data);
+            var dataHTML = '';
+            for (var key in data) {
+                if (data.hasOwnProperty(key)) {
+                    dataHTML += '<p>' + key + ': ' + data[key] + '</p>';
+                }
+            }
+            dataDisplay.innerHTML = dataHTML;
+        };
+    </script>
+</body>
+</html>
